@@ -1,7 +1,7 @@
 import { pool } from "../index.mjs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const {decode, sign } = jwt;
+const { decode, sign } = jwt;
 const { hash, genSalt, compareSync } = bcrypt;
 const saltRound = 10;
 
@@ -42,7 +42,7 @@ export const createUser = async (req, res) => {
 };
 
 export const createTodoList = async (req, res) => {
-    const {title, description, date, status} = req.body;
+    const { title, description, date, status } = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, "mejaputihpunyaugi123");
     pool.query('INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)', [cookies_data.user_id, title, description, date, status], (error, results) => {
