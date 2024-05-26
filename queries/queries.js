@@ -23,11 +23,11 @@ export const createUser = async (req, res) => {
     const salt = await genSalt(saltRound);
     const securePassword = await hash(password, salt);
     try {
-        pool.query("SELECT email FROM users WHERE email = $1", [email], (error, results) => {
+        pool.query('SELECT email FROM users WHERE email = $1', [email], (error, results) => {
             if (results.rows[0]) {
                 return res.status(200).json({status: "email already exist"});
             }
-            pool.query("INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)", [id, name, email, securePassword], (error, results) => {
+            pool.query('INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)', [id, name, email, securePassword], (error, results) => {
                 if (error) {
                     res.status(200).json({status: "fail to signup"});
                 } else {
@@ -44,7 +44,7 @@ export const createTodoList = async (req, res) => {
     const {title, description, date, status} = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, "mejaputihpunyaugi123");
-    pool.query("INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)", [cookies_data.user_id, title, description, date, status], (error, results) => {
+    pool.query('INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)', [cookies_data.user_id, title, description, date, status], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -57,7 +57,7 @@ export const createTodoList = async (req, res) => {
 
 export const readUser = async (req, res) => {
     const {email, password} = req.body;
-    pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
         if (error) {
             res.status(200).json({status: "Your email is false!"});
         } else {
@@ -83,7 +83,7 @@ export const readUser = async (req, res) => {
 export const readTodoList = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = decode(token, "mejaputihpunyaugi123");
-    pool.query("SELECT * FROM todo_list WHERE user_id = $1", [cookies_data.user_id], (error, results) => {
+    pool.query('SELECT * FROM todo_list WHERE user_id = $1', [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error
         } else {
@@ -95,7 +95,7 @@ export const readTodoList = async (req, res) => {
 export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
-    pool.query("SELECT name FROM users WHERE id = $1", [cookies_data.user_id], (error, results) => {
+    pool.query('SELECT name FROM users WHERE id = $1', [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -110,7 +110,7 @@ export const updateTodoListStatus = async (req, res) => {
     const {status, id} = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
-    pool.query("UPDATE todo_list SET status = $1 WHERE id = $2 and user_id = $3", [status, id, cookies_data.user_id], (error, results) => {
+    pool.query('UPDATE todo_list SET status = $1 WHERE id = $2 and user_id = $3', [status, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -123,7 +123,7 @@ export const updateTodoListTitle = async (req, res) => {
     const {title, id} = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
-    pool.query("UPDATE todo_list SET title = $1 WHERE id = $2 AND user_id = $3", [title, id, cookies_data.user_id], (error, results) => {
+    pool.query('UPDATE todo_list SET title = $1 WHERE id = $2 AND user_id = $3', [title, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -136,7 +136,7 @@ export const updateTodoListDescription = async (req, res) => {
     const {description, id} = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
-    pool.query("UPDATE todo_list SET description = $1 WHERE id = $2 AND user_id = $3", [description, id, cookies_data.user_id], (error, results) => {
+    pool.query('UPDATE todo_list SET description = $1 WHERE id = $2 AND user_id = $3', [description, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -149,7 +149,7 @@ export const updateTodoListDate = async (req, res) => {
     const {date, id} = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
-    pool.query("UPDATE todo_list SET date = $1 WHERE id = $2 AND user_id = $3", [date, id, cookies_data.user_id], (error, result) => {
+    pool.query('UPDATE todo_list SET date = $1 WHERE id = $2 AND user_id = $3', [date, id, cookies_data.user_id], (error, result) => {
         if (error) {
             throw error;
         } else {
@@ -169,7 +169,7 @@ export const deleteTodoList = async (req, res) => {
     const { id } = req.body;
     const token = req.cookies.access_token;
     const cookies_data = decode(token, "mejaputihpunyaugi123");
-    pool.query("DELETE FROM todo_list WHERE user_id = $1 AND id = $2", [cookies_data.user_id, id], (error, results) => {
+    pool.query('DELETE FROM todo_list WHERE user_id = $1 AND id = $2', [cookies_data.user_id, id], (error, results) => {
         if (error) {
             throw error;
         } else {
