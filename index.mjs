@@ -4,7 +4,14 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Connector } from '@google-cloud/cloud-sql-connector';
 const { Pool } = pg;
-const db = require("./queries/queries");
+import { 
+        readUser, createUser,
+        createTodoList, deleteCookie,
+        readTodoList, readUserName,
+        updateTodoListTitle, updateTodoListDescription,
+        updateTodoListDate, updateTodoListStatus,
+        deleteTodoList
+} from "./queries/queries";
 
 const connector = new Connector();
 const clientOpts = await connector.getOptions({
@@ -29,17 +36,17 @@ app.use(express.json());
 app.get('/', (req, res, next) => {
     res.send('hello world!')
 });
-app.post('/login', db.readUser);
-app.post('/signup', db.createUser);
-app.post('/add/todo_list', db.createTodoList)
-app.get('/logout', db.deleteCookie)
-app.get('/get/todo_list', db.readTodoList)
-app.get('/get/users/name', db.readUserName);
-app.put('/update/todo_list/title', db.updateTodoListTitle);
-app.put('/update/todo_list/description', db.updateTodoListDescription)
-app.put('/update/todo_list/date', db.updateTodoListDate)
-app.put('/update/todo_list/status', db.updateTodoListStatus);
-app.delete('/delete/todo_list', db.deleteTodoList)
+app.post('/login', readUser);
+app.post('/signup', createUser);
+app.post('/add/todo_list', createTodoList)
+app.get('/logout', deleteCookie)
+app.get('/get/todo_list', readTodoList)
+app.get('/get/users/name', readUserName);
+app.put('/update/todo_list/title', updateTodoListTitle);
+app.put('/update/todo_list/description', updateTodoListDescription)
+app.put('/update/todo_list/date', updateTodoListDate)
+app.put('/update/todo_list/status', updateTodoListStatus);
+app.delete('/delete/todo_list', deleteTodoList)
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
 });

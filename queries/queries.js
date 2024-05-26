@@ -1,9 +1,9 @@
 import { pool } from "../index.mjs";
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 const saltRound = 10;
 
-const emailChecker = async (req, res, next) => {
+export const emailChecker = async (req, res, next) => {
     const {email} = req.body;
     pool.query("SELECT email WHERE email = $1", [email], (error, results) => {
         if (error){
@@ -15,7 +15,7 @@ const emailChecker = async (req, res, next) => {
 
 // CREATE QUERIES
 
-const createUser = async (req, res) => {
+export const createUser = async (req, res) => {
     const {name, email, password} = req.body;
     const id = Math.floor(Math.random() * 1999);
     const salt = await bcrypt.genSalt(saltRound);
@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
     }
 };
 
-const createTodoList = async (req, res) => {
+export const createTodoList = async (req, res) => {
     const {title, description, date, status} = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, "mejaputihpunyaugi123");
@@ -51,7 +51,7 @@ const createTodoList = async (req, res) => {
 
 // READ QUERIES
 
-const readUser = async (req, res) => {
+export const readUser = async (req, res) => {
     const {email, password} = req.body;
     pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
         if (error) {
@@ -75,7 +75,7 @@ const readUser = async (req, res) => {
     });
 }
 
-const readTodoList = async (req, res) => {
+export const readTodoList = async (req, res) => {
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, "mejaputihpunyaugi123");
     pool.query("SELECT * FROM todo_list WHERE user_id = $1", [decode.user_id], (error, results) => {
@@ -86,7 +86,7 @@ const readTodoList = async (req, res) => {
     });
 }
 
-const readUserName = async (req, res) => {
+export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, 'mejaputihpunyaugi123');
     pool.query("SELECT name FROM users WHERE id = $1", [decode.user_id], (error, results) => {
@@ -99,7 +99,7 @@ const readUserName = async (req, res) => {
 
 // UPDATE QUERIES
 
-const updateTodoListStatus = async (req, res) => {
+export const updateTodoListStatus = async (req, res) => {
     const {status, id} = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, 'mejaputihpunyaugi123');
@@ -111,7 +111,7 @@ const updateTodoListStatus = async (req, res) => {
     })
 }
 
-const updateTodoListTitle = async (req, res) => {
+export const updateTodoListTitle = async (req, res) => {
     const {title, id} = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, 'mejaputihpunyaugi123');
@@ -123,7 +123,7 @@ const updateTodoListTitle = async (req, res) => {
     })
 }
 
-const updateTodoListDescription = async (req, res) => {
+export const updateTodoListDescription = async (req, res) => {
     const {description, id} = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, 'mejaputihpunyaugi123');
@@ -135,7 +135,7 @@ const updateTodoListDescription = async (req, res) => {
     })
 }
 
-const updateTodoListDate = async (req, res) => {
+export const updateTodoListDate = async (req, res) => {
     const {date, id} = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, 'mejaputihpunyaugi123');
@@ -149,12 +149,12 @@ const updateTodoListDate = async (req, res) => {
 
 // DELETE QUERIES
 
-const deleteCookie = (req, res) => {
+export const deleteCookie = (req, res) => {
     res.clearCookie("access_token");
     res.send("succes logout!");
 }
 
-const deleteTodoList = async (req, res) => {
+export const deleteTodoList = async (req, res) => {
     const { id } = req.body;
     const token = req.cookies.access_token;
     const decode = jwt.decode(token, "mejaputihpunyaugi123");
@@ -166,17 +166,18 @@ const deleteTodoList = async (req, res) => {
         res.status(404).json({status: "ok"});
     })
 }
-module.exports = {
-    emailChecker,
-    createUser,
-    createTodoList,
-    readUser,
-    readUserName,
-    readTodoList,
-    updateTodoListStatus,
-    updateTodoListTitle,
-    updateTodoListDescription,
-    updateTodoListDate,
-    deleteCookie,
-    deleteTodoList
-}
+
+// module.exports = {
+//     emailChecker,
+//     createUser,
+//     createTodoList,
+//     readUser,
+//     readUserName,
+//     readTodoList,
+//     updateTodoListStatus,
+//     updateTodoListTitle,
+//     updateTodoListDescription,
+//     updateTodoListDate,
+//     deleteCookie,
+//     deleteTodoList
+// }
