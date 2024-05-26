@@ -30,8 +30,9 @@ export const createUser = async (req, res) => {
             pool.query("INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)", [id, name, email, securePassword], (error, results) => {
                 if (error) {
                     res.status(200).json({status: "fail to signup"});
+                } else {
+                    res.status(201).json({status: "ok"});
                 }
-                res.status(201).json({status: "ok"});
             });
         })
     } catch (err) {
@@ -46,8 +47,9 @@ export const createTodoList = async (req, res) => {
     pool.query("INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)", [cookies_data.user_id, title, description, date, status], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: "ok", response: results.rows});
         }
-        res.status(200).json({status: "ok", response: results.rows});
     });
 }
 
@@ -58,21 +60,22 @@ export const readUser = async (req, res) => {
     pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
         if (error) {
             res.status(200).json({status: "Your email is false!"});
-        }
-        const passwordValidation = compareSync(password, results.rows[0].password);
-        if (passwordValidation){
-            const token = sign({
-                user_id: results.rows[0].id 
-            }, "mejaputihpunyaugi123");
-            res.cookie("access_token", token, {
-                secure: false,
-                httpOnly: true,
-                sameSite: "LAX",
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
-            res.status(200).json({status: "ok"});
         } else {
-            res.status(200).json({status: "Your password is false"})
+            const passwordValidation = compareSync(password, results.rows[0].password);
+            if (passwordValidation){
+                const token = sign({
+                    user_id: results.rows[0].id 
+                }, "mejaputihpunyaugi123");
+                res.cookie("access_token", token, {
+                    secure: false,
+                    httpOnly: true,
+                    sameSite: "LAX",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
+                });
+                res.status(200).json({status: "ok"});
+            } else {
+                res.status(200).json({status: "Your password is false"})
+            }
         }
     });
 }
@@ -83,8 +86,9 @@ export const readTodoList = async (req, res) => {
     pool.query("SELECT * FROM todo_list WHERE user_id = $1", [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error
+        } else {
+            res.status(200).json({status: "ok", response: results.rows})
         }
-        res.status(200).json({status: "ok", response: results.rows})
     });
 }
 
@@ -94,8 +98,9 @@ export const readUserName = async (req, res) => {
     pool.query("SELECT name FROM users WHERE id = $1", [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: 'ok', response: results.rows[0].name});
         }
-        res.status(200).json({status: 'ok', response: results.rows[0].name});
     });
 }
 
@@ -108,8 +113,9 @@ export const updateTodoListStatus = async (req, res) => {
     pool.query("UPDATE todo_list SET status = $1 WHERE id = $2 and user_id = $3", [status, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: 'ok'});
         }
-        res.status(200).json({status: 'ok'});
     })
 }
 
@@ -120,8 +126,9 @@ export const updateTodoListTitle = async (req, res) => {
     pool.query("UPDATE todo_list SET title = $1 WHERE id = $2 AND user_id = $3", [title, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: 'ok'});
         }
-        res.status(200).json({status: 'ok'});
     })
 }
 
@@ -132,8 +139,9 @@ export const updateTodoListDescription = async (req, res) => {
     pool.query("UPDATE todo_list SET description = $1 WHERE id = $2 AND user_id = $3", [description, id, cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: 'ok'});
         }
-        res.status(200).json({status: 'ok'});
     })
 }
 
@@ -144,8 +152,9 @@ export const updateTodoListDate = async (req, res) => {
     pool.query("UPDATE todo_list SET date = $1 WHERE id = $2 AND user_id = $3", [date, id, cookies_data.user_id], (error, result) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: 'oke'})
         }
-        res.status(200).json({status: 'oke'})
     });
 }
 
@@ -163,8 +172,9 @@ export const deleteTodoList = async (req, res) => {
     pool.query("DELETE FROM todo_list WHERE user_id = $1 AND id = $2", [cookies_data.user_id, id], (error, results) => {
         if (error) {
             throw error;
+        } else {
+            res.status(200).json({status: "ok"});
         }
-        res.status(200).json({status: "ok"});
     });
 }
 
