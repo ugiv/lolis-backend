@@ -11,7 +11,7 @@ import {
         updateTodoListTitle, updateTodoListDescription,
         updateTodoListDate, updateTodoListStatus,
         deleteTodoList
-} from "./queries/queries";
+} from "./queries/queries.js";
 
 const connector = new Connector();
 const clientOpts = await connector.getOptions({
@@ -26,28 +26,30 @@ export const pool = new Pool({
     database: process.env.DB_NAME,
     max: 5
 });
-const port = parseInt(process.env.PORT) || 8080;
 
 const app = express();
 
 app.use(cookieParser());
-app.use(cors({origin: "http://localhost:3000", credentials: true}));
+app.use(cors({credentials: true}));
 app.use(express.json());
 app.get('/', (req, res, next) => {
-    res.send('hello world!')
+    res.send('hello world!');
 });
 app.post('/login', readUser);
 app.post('/signup', createUser);
 app.post('/add/todo_list', createTodoList)
-app.get('/logout', deleteCookie)
-app.get('/get/todo_list', readTodoList)
+app.get('/logout', deleteCookie);
+app.get('/get/todo_list', readTodoList);
 app.get('/get/users/name', readUserName);
 app.put('/update/todo_list/title', updateTodoListTitle);
-app.put('/update/todo_list/description', updateTodoListDescription)
-app.put('/update/todo_list/date', updateTodoListDate)
+app.put('/update/todo_list/description', updateTodoListDescription);
+app.put('/update/todo_list/date', updateTodoListDate);
 app.put('/update/todo_list/status', updateTodoListStatus);
-app.delete('/delete/todo_list', deleteTodoList)
+app.delete('/delete/todo_list', deleteTodoList);
+
+const port = parseInt(process.env.PORT) || 8080;
 app.listen(port, async () => {
-    console.log(`Server listening on port ${port}`)
+    console.log('process.env: ', process.env);
+    console.log(`Server listening on port ${port}`);
 });
 
