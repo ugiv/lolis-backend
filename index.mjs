@@ -47,7 +47,7 @@ app.put('/update/todo_list/description', updateTodoListDescription)
 app.put('/update/todo_list/date', updateTodoListDate)
 app.put('/update/todo_list/status', updateTodoListStatus);
 app.delete('/delete/todo_list', deleteTodoList)
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Server listening on port ${port}`)
 });
 
