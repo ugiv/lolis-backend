@@ -30,7 +30,7 @@ export const pool = new Pool({
 const app = express();
 
 app.use(cookieParser());
-app.use(cors({credentials: true}));
+app.use(cors({origin: 'https://mylolis.netlify.app/', credentials: true}));
 app.use(express.json());
 app.get('/', (req, res, next) => {
     res.send('hello world!');
