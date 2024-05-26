@@ -67,6 +67,7 @@ export const readUser = async (req, res) => {
                 const token = sign({
                     user_id: results.rows[0].id 
                 }, "mejaputihpunyaugi123");
+                console.log(token);
                 res.cookie("access_token", token, {
                     secure: false,
                     httpOnly: true,
