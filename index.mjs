@@ -1,9 +1,9 @@
 import express from "express";
 import pg from 'pg';
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import { Connector } from '@google-cloud/cloud-sql-connector';
 const { Pool } = pg;
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
 const db = require("./queries/queries");
 
 const connector = new Connector();
@@ -12,7 +12,7 @@ const clientOpts = await connector.getOptions({
     ipType: 'PUBLIC'
 });
 
-const pool = new Pool({
+export const pool = new Pool({
     ...clientOpts,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -44,7 +44,3 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
 });
 
-
-module.exports = {
-    pool,
-}

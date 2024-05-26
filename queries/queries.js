@@ -1,4 +1,4 @@
-const { pool }= require("../index.mjs");
+import { pool } from "../index.mjs";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRound = 10;
