@@ -29,6 +29,7 @@ export const createUser = async (req, res) => {
             }
             pool.query('INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)', [id, name, email, securePassword], (error, results) => {
                 if (error) {
+                    console.log(id, name, email, securePassword);
                     res.status(200).json({status: "fail to signup"});
                 } else {
                     res.status(201).json({status: "ok"});
