@@ -23,13 +23,13 @@ export const createUser = async (req, res) => {
     try {
         pool.query("SELECT email FROM users WHERE email = $1", [email], (error, results) => {
             if (results.rows[0]) {
-                return res.status(505).json({status: "email already exist"});
+                return res.status(200).json({status: "email already exist"});
             }
             pool.query("INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)", [id, name, email, securePassword], (error, results) => {
                 if (error) {
-                    res.status(4001).json({status: "fail to signup"});
+                    res.status(200).json({status: "fail to signup"});
                 }
-                res.status(200).json({status: "ok"});
+                res.status(201).json({status: "ok"});
             });
         })
     } catch (err) {
@@ -55,7 +55,7 @@ export const readUser = async (req, res) => {
     const {email, password} = req.body;
     pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
         if (error) {
-            res.status(404).json({status: "Your email is false!"});
+            res.status(200).json({status: "Your email is false!"});
         }
         const passwordValidation = bcrypt.compareSync(password, results.rows[0].password);
         if (passwordValidation){
@@ -70,7 +70,7 @@ export const readUser = async (req, res) => {
             });
             res.status(200).json({status: "ok"});
         } else {
-            res.status(404).json({status: "Your password is false"})
+            res.status(200).json({status: "Your password is false"})
         }
     });
 }
@@ -163,7 +163,7 @@ export const deleteTodoList = async (req, res) => {
         if (error) {
             throw error;
         }
-        res.status(404).json({status: "ok"});
+        res.status(200).json({status: "ok"});
     })
 }
 
