@@ -98,6 +98,7 @@ export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
     console.log(token);
     const cookies_data = decode(token, 'mejaputihpunyaugi123');
+    console.log(cookies_data.user_id);
     pool.query('SELECT name FROM users WHERE id = $1', [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error;
