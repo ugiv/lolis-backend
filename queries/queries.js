@@ -44,6 +44,7 @@ export const createTodoList = async (req, res) => {
     const { title, description, date, status } = req.body;
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, "mejaputihpunyaugi123");
+    console.log(cookies_data.user_id);
     pool.query('INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)', [cookies_data.user_id, title, description, date, status], (error, results) => {
         if (error) {
             throw error;
