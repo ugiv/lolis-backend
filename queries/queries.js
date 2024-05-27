@@ -82,9 +82,9 @@ export const readUser = async (req, res) => {
                 const token = jwt.sign({ user_id: results.rows[0].id }, "mejaputihpunyaugi123", {expiresIn: "1h"});
                 console.log(token);
                 res.cookie("access_token", token, {
-                    secure: false,
+                    secure: true,
                     httpOnly: true,
-                    sameSite: "NONE",
+                    sameSite: "LAX",
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 });
                 res.status(200).json({status: "ok"});
