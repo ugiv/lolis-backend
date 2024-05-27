@@ -1,7 +1,6 @@
 import { pool } from "../index.mjs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const { sign } = jwt;
 const { hash, genSalt, compareSync } = bcrypt;
 const saltRound = 10;
 
@@ -64,7 +63,7 @@ export const readUser = async (req, res) => {
         } else {
             const passwordValidation = compareSync(password, results.rows[0].password);
             if (passwordValidation){
-                const token = sign({
+                const token = jwt.sign({
                     user_id: results.rows[0].id 
                 }, "mejaputihpunyaugi123");
                 console.log(token);
