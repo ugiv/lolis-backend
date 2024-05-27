@@ -44,7 +44,6 @@ export const createTodoList = async (req, res) => {
     const { title, description, date, status } = req.body;
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, "mejaputihpunyaugi123");
-    console.log(cookies_data.user_id);
     pool.query('INSERT INTO todo_list(user_id, title, description, date, status) VALUES($1, $2, $3, $4, $5)', [cookies_data.user_id, title, description, date, status], (error, results) => {
         if (error) {
             throw error;
@@ -59,15 +58,19 @@ export const createTodoList = async (req, res) => {
 export const readTodoList = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, "mejaputihpunyaugi123");
-    console.log(cookies_data.user_id);
-    pool.query('SELECT * FROM todo_list WHERE user_id = $1', [cookies_data.user_id], (error, results) => {
-        if (error) {
-            throw error
-        } else {
-            res.status(200).json({status: "ok", response: results.rows})
-        }
-    });
+    try {
+        pool.query('SELECT * FROM todo_list WHERE user_id = $1', [cookies_data.user_id], (error, results) => {
+            if (error) {
+                throw error
+            } else {
+                res.status(200).json({status: "ok", response: results.rows})
+            }
+        });
+    } catch(error){
+        console.log(error);
+    }
 }
+
 export const readUser = async (req, res) => {
     const {email, password} = req.body;
     pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
@@ -95,16 +98,18 @@ export const readUser = async (req, res) => {
 
 export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
-    console.log(token);
     const cookies_data = jwt.decode(token, 'mejaputihpunyaugi123');
-    console.log(cookies_data.user_id);
-    pool.query('SELECT name FROM users WHERE id = $1', [cookies_data.user_id], (error, results) => {
-        if (error) {
-            throw error;
-        } else {
-            res.status(200).json({status: 'ok', response: results.rows[0].name});
-        }
-    });
+    try {
+        pool.query('SELECT name FROM users WHERE id = $1', [cookies_data.user_id], (error, results) => {
+            if (error) {
+                throw error;
+            } else {
+                res.status(200).json({status: 'ok', response: results.rows[0].name});
+            }
+        });
+    } catch(error){
+        console.log(error);
+    }
 }
 
 // UPDATE QUERIES
