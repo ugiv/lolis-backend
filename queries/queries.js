@@ -56,32 +56,6 @@ export const createTodoList = async (req, res) => {
 
 // READ QUERIES
 
-export const readUser = async (req, res) => {
-    const {email, password} = req.body;
-    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
-        if (error) {
-            res.status(200).json({status: "Your email is false!"});
-        } else {
-            const passwordValidation = compareSync(password, results.rows[0].password);
-            if (passwordValidation){
-                const token = jwt.sign({
-                    user_id: results.rows[0].id 
-                }, "mejaputihpunyaugi123");
-                console.log(token);
-                res.cookie("access_token", token, {
-                    secure: false,
-                    httpOnly: true,
-                    sameSite: "LAX",
-                    maxAge: 7 * 24 * 60 * 60 * 1000
-                });
-                res.status(200).json({status: "ok"});
-            } else {
-                res.status(200).json({status: "Your password is false"})
-            }
-        }
-    });
-}
-
 export const readTodoList = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, "mejaputihpunyaugi123");
@@ -94,6 +68,30 @@ export const readTodoList = async (req, res) => {
         }
     });
 }
+export const readUser = async (req, res) => {
+    const {email, password} = req.body;
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+        if (error) {
+            res.status(200).json({status: "Your email is false!"});
+        } else {
+            const passwordValidation = compareSync(password, results.rows[0].password);
+            if (passwordValidation){
+                const token = jwt.sign({ user_id: results.rows[0].id }, "mejaputihpunyaugi123", {expiresIn: "1h"});
+                console.log(token);
+                res.cookie("access_token", token, {
+                    secure: false,
+                    httpOnly: true,
+                    sameSite: "NONE",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
+                });
+                res.status(200).json({status: "ok"});
+            } else {
+                res.status(200).json({status: "Your password is false"})
+            }
+        }
+    });
+}
+
 
 export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
