@@ -49,7 +49,7 @@ export const createTodoList = async (req, res) => {
         if (error) {
             throw error;
         } else {
-            res.status(200).json({status: "ok", response: results.rows});
+            res.status(200).json({status: "ok"});
         }
     });
 }
@@ -85,6 +85,7 @@ export const readUser = async (req, res) => {
 export const readTodoList = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, "mejaputihpunyaugi123");
+    console.log(cookies_data.user_id);
     pool.query('SELECT * FROM todo_list WHERE user_id = $1', [cookies_data.user_id], (error, results) => {
         if (error) {
             throw error
