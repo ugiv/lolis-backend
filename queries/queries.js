@@ -98,6 +98,11 @@ export const readUser = async (req, res) => {
 export const readUserName = async (req, res) => {
     const token = req.cookies.access_token;
     const cookies_data = jwt.decode(token, 'mejaputihpunyaugi123');
+    if (cookies_data){
+        console.log(cookies_data.user_id);
+    } else {
+        console.log('Fail to read cookie!');
+    }
     try {
         pool.query('SELECT name FROM users WHERE id = $1', [cookies_data.user_id], (error, results) => {
             if (error) {
@@ -184,18 +189,3 @@ export const deleteTodoList = async (req, res) => {
         }
     });
 }
-
-// module.exports = {
-//     emailChecker,
-//     createUser,
-//     createTodoList,
-//     readUser,
-//     readUserName,
-//     readTodoList,
-//     updateTodoListStatus,
-//     updateTodoListTitle,
-//     updateTodoListDescription,
-//     updateTodoListDate,
-//     deleteCookie,
-//     deleteTodoList
-// }
