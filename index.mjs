@@ -31,7 +31,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(cors({
-                origin: 'https://mylolis.netlify.app', 
+                origin: '*', 
                 credentials: true,
                 methods: ["GET", "POST", "PUT", "DELETE"]
             }));
