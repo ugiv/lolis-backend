@@ -84,6 +84,7 @@ export const readUser = async (req, res) => {
                 res.cookie("access_token", token, {
                     secure: true,
                     httpOnly: true,
+                    sameSite: 'none',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 });
                 res.status(200).json({status: "ok"});
